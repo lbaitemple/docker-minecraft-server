@@ -20,6 +20,14 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.3/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
+### enable swap
+```
+sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=4096
+sudo /sbin/mkswap /var/swap.1
+sudo /sbin/swapon /var/swap.1
+echo "/var/swap.1 swap swap" | sudo tee -a  /etc/fstab
+```
+
 ## git clone
 ```
 cd ~

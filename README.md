@@ -1,3 +1,105 @@
+### get into ec2 and install docker
+```
+sudo apt update
+sudo apt upgrade -y
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+sudo curl -L "https://github.com/docker/compose/releases/download/1.27.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+## git clone
+```
+cd ~
+git clone https://github.com/lbaitemple/docker-minecraft-server
+```
+
+
+## create duckdns ip
+```
+cd ~
+mkdir duckdns
+cd duckdns
+cp ~/docker-minecraft-server/duck.sh .
+cp ~/docker-minecraft-server/duck_daemon.sh .
+chmod 700 duck.sh
+chmod +x duck_daemon.sh
+sudo chown root duck_daemon.sh
+sudo chmod 744 duck_daemon.sh
+sudo ./duck_daemon.sh
+sudo ln -s ~/duckdns/duck_daemon.sh /etc/rc2.d/S10duckdns
+ls -la /etc/rc2.d/
+pkill duck
+sudo /etc/rc2.d/S10duckdns
+```
+
+
+## start server
+```
+cd ~/docker-minecraft-server
+docker-compose up -d
+``` 
+
+### create let's encrypt ssl
+```
+sudo docker ps -a
+```
+find container id
+```
+sudo docker exec -it $(sudo docker ps -q)  /bin/bash
+```
+Now, you can add
+```
+add-apt-repository ppa:certbot/certbot
+apt-get update
+apt-get install python-certbot-apache -y
+certbot --apache -d nameurl
+```
+After enter your email address, you can
+```
+a
+y
+2
+```
+
+setup smtp server usign postfix
+```
+apt-get install systemd
+```
+
+#### other important docker commands
+##### Stop all running containers
+```
+docker stop $(docker ps -aq)
+```
+
+##### Remove all containers
+```
+docker rm $(docker ps -aq)
+```
+
+##### Stop all running containers
+```
+docker rmi $(docker images -q)
+```
+
+
+
+
+
+
 [![Docker Pulls](https://img.shields.io/docker/pulls/itzg/minecraft-server.svg)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![Docker Stars](https://img.shields.io/docker/stars/itzg/minecraft-server.svg?maxAge=2592000)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![GitHub Issues](https://img.shields.io/github/issues-raw/itzg/docker-minecraft-server.svg)](https://github.com/itzg/docker-minecraft-server/issues)
